@@ -6,7 +6,6 @@ import { Loader } from '../../Loader/loader';
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from 'react';
 import { toast } from "react-toastify"
-
 import { serverUrl } from "../../../config";
 import axios from "axios"
 function Products() {
@@ -21,11 +20,9 @@ function Products() {
     const [product, setProducts] = useState()
     useEffect(() => {
         let type=[];
-
         if(filteritem===""){
-            type = allfoods.filter((item) => item.producttype === producttype)
+            type = allfoods?.filter((item) => item.producttype === producttype)
             setProducts(type)
-
         }
         else if(filteritem==="sold"){
             type = allfoods.filter((item) => item.producttype === producttype && item.status===true)

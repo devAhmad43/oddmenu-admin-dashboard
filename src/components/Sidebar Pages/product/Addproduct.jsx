@@ -129,7 +129,7 @@ const Addproduct = () => {
             <div className="my-4 grid grid-cols-3 gap-x-6 gap-y-2 ">
               <div className=" col-sapn-3 sm:col-span-1">
                 <label
-                  htmlFor="title"
+                  htmlFor="producttype"
                   className="block text-md font-medium leading-6 text-purple-900"
                 >
                   Product Type

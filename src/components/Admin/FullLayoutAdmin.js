@@ -8,25 +8,27 @@ import { useDispatch, useSelector} from "react-redux";
  import { Addorder } from "../../StoreRedux/orderSlice";
 import { toast } from "react-toastify";
 import { Sidebar } from "../Sidebar Pages/SideBar";
-import { Addproduct } from "../../StoreRedux/productSlice";
+import { Addproduct, selectproducts } from "../../StoreRedux/productSlice";
 import {selectAdmin} from '../../StoreRedux/adminSlice'
 export const AdminLayout = () => {
   const [loader, setloader] = useState(false);
   const dispatch = useDispatch();
-const storeAdmin=useSelector(selectAdmin)
+const storeAdmin=useSelector(selectAdmin) 
+const products=useSelector(selectproducts)
+console.log("store===>",products)
 const id=storeAdmin._id
-//// ////////  fetch products ////////////
+////////////  fetch products ////////////
 useEffect(() => {
   const fetchProducts = async () => {
-
     try {
       const response = await axios.get(
         `${serverUrl}/api/product/getProducts/${id}`
       );
+      console.log("store==>layout produts",response)
       if (response && response.status === 200) {
         setloader(false);
         console.log(response.data.finddata);
-        dispatch(Addproduct(response.data.finddata));
+        dispatch(Addproduct(response.data.products));
         toast.success("Products fetch successfully");
       }
     } catch (error) {

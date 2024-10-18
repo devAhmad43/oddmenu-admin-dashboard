@@ -5,7 +5,7 @@ import {selectproducts} from "../../StoreRedux/productSlice";
 const Statistics = () => {
   const storeOrders = useSelector(selectorders);
 const StoreProducts=useSelector(selectproducts)
-
+console.log("stats products===>",StoreProducts);
   return (
     <div>
       <h2 className="text-3xl font-bold mt-8 mb-5 text-gray-900 sm:text-4xl">
@@ -116,9 +116,9 @@ const StoreProducts=useSelector(selectproducts)
 
           <div className="mx-5">
             <h4 className="text-2xl font-semibold text-gray-700">
-            {StoreProducts.filter((item)=>item.producttype === "equipment" && !item.status).length}
+            {StoreProducts?.filter((item)=>item?.producttype === "breakfast" && !item.status).length}
             </h4>
-            <div className="text-gray-500">Equipment Products</div>
+            <div className="text-gray-500">BreakFast Products</div>
           </div>
         </div>
       </div> 
