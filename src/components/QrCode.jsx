@@ -44,7 +44,7 @@ const QrCode = () => {
       return;
     }
 
-    const qrCodeUrl = `https://oddmenu-website.vercel.app/shop/${adminId}?table=${tableNumber}`;
+    const qrCodeUrl = `http://localhost:5173/shop/${adminId}?table=${tableNumber}`;
     setQrData(qrCodeUrl);
     try {
       setLoading(true);
