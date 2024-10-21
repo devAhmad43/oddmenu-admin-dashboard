@@ -21,7 +21,7 @@ const QrCode = () => {
       fetchQrCodes(adminId);
     }
   }, [adminId]);
-
+  //dafadadfafa
   // Function to fetch QR codes from the backend
   const fetchQrCodes = async () => {
     try {
