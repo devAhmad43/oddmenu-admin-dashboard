@@ -212,7 +212,7 @@ export function Sidebar() {
               </li>
               <li>
                 <Link
-                  to="/Admin/users"
+                  to="/Admin/qrcode"
                   className={classNames(
                     location.pathname === "/Admin/users"
                       ? "text-black bg-gray-200"
@@ -225,7 +225,7 @@ export function Sidebar() {
                     alt="Authentication Icon"
                     className="flex-shrink-0 w-6 h-6"
                   />
-                  <span className="ml-3">Users</span>
+                  <span className="ml-3">Qr Code</span>
                 </Link>
               </li>
 

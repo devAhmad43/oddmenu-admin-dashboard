@@ -45,7 +45,6 @@ const Orders = (props) => {
             console.log(response.data.item);
             if (response && response.status === 200) {
                 setLoading(false)
-
                 dispatch(updateorders(response.data.item))
                 toast.success(response.data.message)
             }
@@ -61,7 +60,6 @@ const Orders = (props) => {
             } else {
                 toast.error("Failed to Update order status")
             }
-
         }
     }
     return (
@@ -73,7 +71,7 @@ const Orders = (props) => {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[150px] text-md font-bold uppercase tracking-wider">
-                                    Order Id
+                                    Table No
                                 </th>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[200px] text-md font-bold uppercase tracking-wider">
                                    Total Price
@@ -98,7 +96,7 @@ const Orders = (props) => {
                                     <tr key={index} className="text-center">
 
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-bold  curser-pointer text-purple-900">
-                                           <Link to={`/Admin/order/${user._id}`}>{user.product[0].orderId}</Link> 
+                                           <Link to={`/Admin/order/${user._id}`}>{user.table}</Link> 
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {user.price}

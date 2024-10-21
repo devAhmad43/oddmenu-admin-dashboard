@@ -146,9 +146,9 @@ const EditProduct = () => {
                     >
                       <option value="">Select product type</option>
                       <option value="breakfast">Breakfast</option>
-                      <option value="cuisine">Cuisine</option>
+                      <option value="hot meal">Cuisine</option>
                       <option value="desert">Desert</option>
-                      <option value="drink">Drinks</option>
+                      <option value="salad">Drinks</option>
                     </select>
                     {error.producttype && (
                       <p className="text-red-700 text-sm font-normal">{error.producttype}</p>

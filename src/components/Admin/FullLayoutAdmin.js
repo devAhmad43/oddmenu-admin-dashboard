@@ -50,7 +50,8 @@ useEffect(() => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${serverUrl}/api/order/getallorder`);
+        const response = await axios.get(`${serverUrl}/api/order/getallorder/${id}`);
+        console.log("order===.",response)
         if (response && response.status === 200) {
           setloader(false);
           dispatch(Addorder(response.data.data));
