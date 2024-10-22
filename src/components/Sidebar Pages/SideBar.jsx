@@ -75,7 +75,7 @@ export function Sidebar() {
             link: "/Admin/product/breakfast",
           },
           {
-            text: "Cuisine",
+            text: "Hot Meal",
             icon: (
               <img
                 src={"/picture3.png"}
@@ -83,7 +83,7 @@ export function Sidebar() {
                 className="flex-shrink-0 w-8 h-8"
               />
             ),
-            link: "/Admin/product/cuisine",
+            link: "/Admin/product/hotmeal",
           },
         {
           text: "Desert",
@@ -97,7 +97,7 @@ export function Sidebar() {
           link: "/Admin/product/desert",
         },
         {
-            text: "Drinks",
+            text: "Salad",
             icon: (
               <img
                 src={"/picture3.png"}
@@ -105,7 +105,7 @@ export function Sidebar() {
                 className="flex-shrink-0 w-8 h-8"
               />
             ),
-            link: "/Admin/product/drink",
+            link: "/Admin/product/salad",
           },
         // { text: "Invoice", link: "/" },
       ],

@@ -43,8 +43,7 @@ const QrCode = () => {
       console.error('Admin ID or Table Number missing');
       return;
     }
-
-    const qrCodeUrl = `http://localhost:5173/shop/${adminId}?table=${tableNumber}`;
+    const qrCodeUrl = `https://oddmenu.netlify.app/shop/${adminId}?table=${tableNumber}`;
     setQrData(qrCodeUrl);
     try {
       setLoading(true);

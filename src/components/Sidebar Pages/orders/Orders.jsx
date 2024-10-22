@@ -4,66 +4,67 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../Loader/loader";
 import DeleteModal from "../../DeleteModal";
 import { toast } from "react-toastify";
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom";
 import { serverUrl } from "../../../config";
-// import OrderList from "../../Websocket";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 const Orders = (props) => {
-     const {userId}= useParams()
+    const { userId } = useParams();
     const [myorders, setmyorders] = useState([]);
     const [delId, setdelId] = useState(null);
     const [showModal, setshowModal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showMessage, setShowMessage] = useState(true); // State to show/hide the message
     const storeAllOrders = useSelector(selectorders);
     const dispatch = useDispatch();
+
     useEffect(() => {
-        if(userId==="allorders"){
+        // Hide message after 4 seconds
+        const timer = setTimeout(() => {
+            setShowMessage(false);
+        }, 4000);
+
+        return () => clearTimeout(timer); // Clear the timer if the component unmounts
+    }, []);
+
+    useEffect(() => {
+        if (userId === "allorders") {
             const data = [...storeAllOrders].reverse();
             setmyorders(data);
-        }else{
-            const data=storeAllOrders.filter((item)=>item.userId===userId);
+        } else {
+            const data = storeAllOrders.filter((item) => item.userId === userId);
             setmyorders(data);
         }
-       // eslint-disable-next-line
+        // eslint-disable-next-line
     }, [storeAllOrders, dispatch]);
 
     const handleChange = async (status, id) => {
-        let changestatus = false;
-        if (status === true) {
-            changestatus = false;
-        }
-        else {
-            changestatus = true;
-        }
+        let changestatus = status === true ? false : true;
+
         try {
-            // console.log(changestatus)
-            setLoading(true)
+            setLoading(true);
             const response = await axios.put(`${serverUrl}/api/order/updatestatus/${id}`, {
-                status:changestatus
-            })
-            console.log(response.data.item);
+                status: changestatus
+            });
             if (response && response.status === 200) {
-                setLoading(false)
-                dispatch(updateorders(response.data.item))
-                toast.success(response.data.message)
+                setLoading(false);
+                dispatch(updateorders(response.data.item));
+                toast.success(response.data.message);
             }
         } catch (error) {
-            setLoading(false)
-            if (error.response.status === 401) {
-                toast.error(error.response.message);
-            } else if (error.response.status === 400) {
-                toast.error(error.response.message);
-            } else if (error.response.status === 500) {
-                toast.error(error.response.message);
-
-            } else {
-                toast.error("Failed to Update order status")
-            }
+            setLoading(false);
+            toast.error("Failed to Update order status");
         }
-    }
+    };
+
     return (
         <>
+            {showMessage && (
+                <div className="text-center bg-blue-100 text-blue-700 p-2 rounded-md mb-4">
+                    Click on table number for details
+                </div>
+            )}
             <div className="min-w-full overflow-x-auto">
                 <h2 className="mr-3 font-bold text-2xl text-center mb-4 text-purple-700">All Orders</h2>
                 <div className="overflow-x-auto">
@@ -74,13 +75,13 @@ const Orders = (props) => {
                                     Table No
                                 </th>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[200px] text-md font-bold uppercase tracking-wider">
-                                   Total Price
+                                    Total Price
                                 </th>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[150px] text-md font-bold uppercase tracking-wider">
                                     Date
                                 </th>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[100px] text-md font-bold uppercase tracking-wider">
-                                Payment Status
+                                    Payment Status
                                 </th>
                                 <th scope="col" className="px-3 py-3 text-center min-w-[100px] text-md font-bold uppercase tracking-wider">
                                     Status
@@ -94,9 +95,8 @@ const Orders = (props) => {
                             {myorders && myorders.length > 0 ? (
                                 myorders.map((user, index) => (
                                     <tr key={index} className="text-center">
-
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold  curser-pointer text-purple-900">
-                                           <Link to={`/Admin/order/${user._id}`}>{user.table}</Link> 
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold curser-pointer text-purple-900">
+                                           <Link to={`/Admin/order/${user._id}`}>{user.tableNumber}</Link> 
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {user.price}
@@ -104,17 +104,13 @@ const Orders = (props) => {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {convertIsoToSimpleDateTime(user.date)}
                                         </td>
-                                        <td className=" font-medium text-gray-900">
+                                        <td className="font-medium text-gray-900">
                                             <select
                                                 className="py-1 rounded-full bg-neutral-300 focus:outline-none focus:ring-0"
-                                                
-                                                onChange={(e) => {
-                                                    // const newStatus = e.target.value === "completed" ? true : false;
-                                                    handleChange(user.status, user._id);
-                                                }}
+                                                onChange={() => handleChange(user.status, user._id)}
                                             >
-                                                <option selected={user.status===true?true:false} value="completed">Completed</option>
-                                                <option selected={user.status===false?true:false}  value="pending">Pending</option>
+                                                <option selected={user.status === true} value="completed">Completed</option>
+                                                <option selected={user.status === false} value="pending">Pending</option>
                                             </select>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -153,7 +149,6 @@ const Orders = (props) => {
                         </tbody>
                     </table>
                 </div>
-                {/* <OrderList></OrderList> */}
             </div>
             <Loader loading={loading} />
             <DeleteModal
@@ -166,9 +161,9 @@ const Orders = (props) => {
         </>
     );
 };
+
 function convertIsoToSimpleDateTime(isoDateString) {
     const date = new Date(isoDateString);
-
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -178,4 +173,5 @@ function convertIsoToSimpleDateTime(isoDateString) {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
 export default Orders;

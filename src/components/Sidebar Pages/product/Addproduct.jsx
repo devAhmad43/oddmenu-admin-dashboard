@@ -140,13 +140,13 @@ const Addproduct = () => {
                     required
                     name="producttype"
                     value={addproduct.producttype}
-                    className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
+                    className="block w-full border-b-2 border-gray-300 py-1.5 text-purple-900 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6"
                   >
                     <option value="">Select product type</option>
                     <option value="breakfast">BreakFast</option>
-                    <option value="hot meal">Cuisine</option>
+                    <option value="hotmeal">Hot Meal</option>
                     <option value="desert">Desert</option>
-                    <option value="salad">Drinks</option>
+                    <option value="salad">Salad</option>
                   </select>
                   {error.title && (
                     <p className="text-red-700 text-sm font-normal">
@@ -170,7 +170,7 @@ const Addproduct = () => {
                     name="title"
                     value={addproduct.title}
                     placeholder="Title"
-                    className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
+                    className="block w-full border-b-2 border-gray-300 py-1.5 text-purple-900 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6"
                   />
                   {error.title && (
                     <p className="text-red-700 text-sm font-normal">
@@ -193,7 +193,7 @@ const Addproduct = () => {
                     onChange={handleChangeInput}
                     type="number"
                     placeholder="0"
-                    className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
+                    className="block w-full border-b-2 border-gray-300 py-1.5 text-purple-900 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6"
                   />
                   {error.price && (
                     <p className="text-red-700 text-sm font-normal">
@@ -202,7 +202,7 @@ const Addproduct = () => {
                   )}
                 </div>
               </div>
-              <div className="col-sapn-3 sm:col-span-1">
+              <div className="col-span-3">
                 <label
                   htmlFor="description"
                   className="block text-md font-medium leading-6 text-purple-900"
@@ -216,7 +216,7 @@ const Addproduct = () => {
                     onChange={handleChangeInput}
                     type="text"
                     placeholder="description..."
-                    className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
+                    className="block w-full border-b-2 border-gray-300 py-1.5 text-purple-900 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6"
                   />
                   {error.description && (
                     <p className="text-red-700 text-sm font-normal">
@@ -246,29 +246,29 @@ const Addproduct = () => {
               {/* Preview section */}
               {previewImage && (
                 <div className="mt-4">
-                  <h3 className="text-lg text-purple-900 font-bold">Preview:</h3>
+                  <h3 className="text-lg text-purple-900 font-semibold">
+                    Image Preview:
+                  </h3>
                   <img
                     src={previewImage}
                     alt="Preview"
-                    className="max-w-sm h-auto"
+                    className="h-40 mt-2"
                   />
                 </div>
               )}
             </div>
-          </div>
+            <div className="mt-2 flex justify-end">
+          <button
+            type="submit"
+            className="rounded-md bg-purple-900 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-900 focus:ring-offset-2"
+          >
+            {loading ? <Loader /> : "Add Product"}
+          </button>
         </div>
-        {loading && <Loader />}
-        <div className="border-t mt-10 border-gray-900/10 pt-6">
-          <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button
-              type="submit"
-              className="rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
-            >
-              Save
-            </button>
           </div>
         </div>
       </form>
+      <Loader loading={loading} />
     </>
   );
 };

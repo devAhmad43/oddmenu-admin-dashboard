@@ -16,22 +16,16 @@ const EditProduct = () => {
   const Doorerror = {
     title: "",
     price: "",
-    hostingfee: "",
-    condition: "",
-    power: "",
-    machines: "",
     producttype: "",
-    monthlysupport: "",
-    installation: "",
-    date: "",
+    description: "",
   };
 
   const [error, setError] = useState(Doorerror);
   const [addproduct, setaddproduct] = useState();
   const [loading, setloading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null); // State for new image
-  const cloudName = 'dxtbs0yyv';  // Cloudinary cloud name
-  const uploadPreset = 'zuifyjrj'; // Cloudinary upload preset
+  const [selectedImage, setSelectedImage] = useState(null);
+  const cloudName = 'dxtbs0yyv';
+  const uploadPreset = 'zuifyjrj';
 
   useEffect(() => {
     const find = products.find((item) => item._id === productId);
@@ -48,7 +42,6 @@ const EditProduct = () => {
     setaddproduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Delete the old image from Cloudinary
   const deleteOldImage = async (publicId) => {
     try {
       await axios.post(`${serverUrl}/api/cloudinary/delete`, { publicId });
@@ -57,7 +50,6 @@ const EditProduct = () => {
     }
   };
 
-  // Handle image selection
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -65,7 +57,6 @@ const EditProduct = () => {
     }
   };
 
-  // Upload the new image to Cloudinary
   const uploadImage = async (imageFile) => {
     const formData = new FormData();
     formData.append('file', imageFile);
@@ -85,24 +76,21 @@ const EditProduct = () => {
     setloading(true);
 
     try {
-      // Delete old image if it exists
       if (addproduct.imagePublicId) {
         await deleteOldImage(addproduct.imagePublicId);
       }
 
-      // Upload new image if a new one is selected
       let imageUrl = addproduct.imageUrl;
       if (selectedImage) {
         imageUrl = await uploadImage(selectedImage);
       }
 
-      // Update product with new data
       const updatedProduct = {
         title: addproduct.title,
         price: parseInt(addproduct.price),
         producttype: addproduct.producttype,
         description: addproduct.description,
-        imageUrl, // New image URL
+        imageUrl,
       };
 
       const response = await axios.put(`${serverUrl}/api/product/updateProduct/${productId}`, updatedProduct);
@@ -130,7 +118,7 @@ const EditProduct = () => {
               <h2 className="text-3xl mt-4 font-bold tracking-tight text-purple-900 sm:text-4xl">
                 Update Product
               </h2>
-              <div className="my-4 grid grid-cols-3 gap-x-6 gap-y-2 ">
+              <div className="my-4 grid grid-cols-3 gap-x-6 gap-y-2">
                 {/* Product Type */}
                 <div className="col-span-3 sm:col-span-1">
                   <label htmlFor="producttype" className="block text-md font-medium leading-6 text-purple-900">
@@ -142,13 +130,13 @@ const EditProduct = () => {
                       required
                       name="producttype"
                       value={addproduct.producttype}
-                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm"
+                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     >
                       <option value="">Select product type</option>
                       <option value="breakfast">Breakfast</option>
-                      <option value="hot meal">Cuisine</option>
+                      <option value="hotmeal">Hot Meal</option>
                       <option value="desert">Desert</option>
-                      <option value="salad">Drinks</option>
+                      <option value="salad">Salad</option>
                     </select>
                     {error.producttype && (
                       <p className="text-red-700 text-sm font-normal">{error.producttype}</p>
@@ -169,7 +157,7 @@ const EditProduct = () => {
                       name="title"
                       value={addproduct.title}
                       placeholder="Title"
-                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm"
+                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     />
                     {error.title && <p className="text-red-700 text-sm font-normal">{error.title}</p>}
                   </div>
@@ -187,46 +175,47 @@ const EditProduct = () => {
                       onChange={handleChangeInput}
                       type="number"
                       placeholder="0"
-                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm"
+                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     />
                     {error.price && <p className="text-red-700 text-sm font-normal">{error.price}</p>}
                   </div>
                 </div>
 
                 {/* Description */}
-                <div className="col-span-3 sm:col-span-1">
+                <div className="col-span-3">
                   <label htmlFor="description" className="block text-md font-medium leading-6 text-purple-900">
                     Description
                   </label>
                   <div className="mt-2">
-                    <input
+                  <textarea
                       value={addproduct.description}
                       name="description"
                       onChange={handleChangeInput}
-                      type="text"
+                      rows="4"
                       placeholder="Enter description"
-                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm"
+                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     />
-                    {error.description && <p className="text-red-700 text-sm font-normal">{error.description}</p>}
+                    {error.description && (
+                      <p className="text-red-700 text-sm font-normal">{error.description}</p>
+                    )}
                   </div>
                 </div>
 
-                {/* Image Upload */}
-                <div className="col-span-3 sm:col-span-1">
+                {/* Image Upload - below description */}
+                <div className="col-span-3">
                   <label className="block text-md font-medium leading-6 text-purple-900">Product Image</label>
                   <div className="mt-2">
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageSelect}
-                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm"
+                      className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     />
-                                       {selectedImage ? (
+                    {selectedImage ? (
                       <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="mt-2 h-32" />
                     ) : addproduct.imageUrl ? (
                       <img src={addproduct.imageUrl} alt="Previous" className="mt-2 h-32" />
                     ) : null}
-
                   </div>
                 </div>
               </div>
@@ -234,9 +223,9 @@ const EditProduct = () => {
             <div className="mt-6 flex items-center justify-end gap-x-6">
               <button
                 type="submit"
-                className="rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500"
+                className="rounded-md bg-purple-900 px-6 py-2 text-sm font-semibold text-white shadow-md hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all duration-300 ease-in-out"
               >
-                Update Product
+                {loading ? <Loader /> : "Update Product"}
               </button>
             </div>
           </div>

@@ -26,60 +26,71 @@ function OrderDetailPage() {
     return (
         <div className="container mx-auto md:px-4">
             {orderDetails ? (
-                <div>
-                    {/* Render Order Details */}
-                    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-                        <h1 className="text-2xl font-bold text-purple-900">Order Details:</h1>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">Order ID: </span>{orderDetails._id}
-                        </p>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">Table: </span>{orderDetails.table}
-                        </p>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">Total Price: </span>${orderDetails.price}
-                        </p>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">No of Items: </span>{orderDetails.noofitems}
-                        </p>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">Created At: </span>{new Date(orderDetails.createdAt).toLocaleString()}
-                        </p>
-                        <p className="text-sm text-gray-600 my-2">
-                            <span className="text-purple-600 font-bold">Status: </span>{orderDetails.status ? 'Completed' : 'Pending'}
-                        </p>
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h1 className="text-2xl font-bold text-purple-900 mb-6">Order Details</h1>
+
+                    {/* Order Details Table in a Single Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div>
+                            <p className="text-purple-600 font-bold">Order ID:</p>
+                            <p className="text-gray-600">{orderDetails._id}</p>
+                        </div>
+                        <div>
+                            <p className="text-purple-600 font-bold">Table Number:</p>
+                            <p className="text-gray-600">{orderDetails.tableNumber}</p>
+                        </div>
+                        <div>
+                            <p className="text-purple-600 font-bold">Total Price:</p>
+                            <p className="text-gray-600">${orderDetails.price}</p>
+                        </div>
+                        <div>
+                            <p className="text-purple-600 font-bold">Number of Items:</p>
+                            <p className="text-gray-600">{orderDetails.noofitems}</p>
+                        </div>
+                        <div>
+                            <p className="text-purple-600 font-bold">Created At:</p>
+                            <p className="text-gray-600">{new Date(orderDetails.createdAt).toLocaleString()}</p>
+                        </div>
+                        <div>
+                            <p className="text-purple-600 font-bold">Status:</p>
+                            <p className="text-gray-600">{orderDetails.status ? 'Completed' : 'Pending'}</p>
+                        </div>
                     </div>
 
-                    {/* Render each Product */}
+                    {/* Product Details */}
                     {book ? (
-                        book.map((book1, index) => {
-                            return (
-                                <div key={index} className="bg-white grid grid-cols-2 rounded-lg shadow-md overflow-hidden mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {book.map((book1, index) => (
+                                <div
+                                    key={index}
+                                    className="bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-center"
+                                >
                                     {/* Product Image */}
-                                    <div className="col-span-2 md:col-span-1">
-                                        <img className="h-[300px] w-full" src={book1.imageUrl} alt="fooditem" />
+                                    <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
+                                        <img
+                                            className="h-32 w-32 object-cover rounded-md"
+                                            src={book1.imageUrl}
+                                            alt="Product"
+                                        />
                                     </div>
 
-                                    {/* Product Details */}
-                                    <div className="col-span-2 md:col-span-1 flex flex-col justify-center p-4">
-                                        <h3 className="text-2xl font-semibold text-purple-800">{book1.title}</h3>
-                                        <p className="text-sm text-gray-600 my-2">
-                                            <span className="text-purple-600 font-bold">Price: </span>${book1.price}
-                                        </p>
-                                       
-                                       
-                    
-                                        <p className="text-sm text-gray-600 my-2">
-                                            <span className="text-purple-600 font-bold">Product Type: </span>{book1.producttype}
-                                        </p>
-                                       
-                                        <p className="text-sm text-gray-600 my-2">
-                                            <span className="text-purple-600 font-bold">Description: </span>{book1.description}
-                                        </p>
+                                    {/* Product Information */}
+                                    <div className="flex-grow">
+                                        <p className="text-purple-600 font-bold">Title:</p>
+                                        <p className="text-gray-600 mb-2">{book1.title}</p>
+
+                                        <p className="text-purple-600 font-bold">Price:</p>
+                                        <p className="text-gray-600 mb-2">${book1.price}</p>
+
+                                        <p className="text-purple-600 font-bold">Product Type:</p>
+                                        <p className="text-gray-600 mb-2">{book1.producttype}</p>
+
+                                        <p className="text-purple-600 font-bold">Description:</p>
+                                        <p className="text-gray-600">{book1.description}</p>
                                     </div>
                                 </div>
-                            );
-                        })
+                            ))}
+                        </div>
                     ) : (
                         <p>No products found for this order.</p>
                     )}
