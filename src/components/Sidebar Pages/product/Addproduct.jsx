@@ -262,7 +262,7 @@ const Addproduct = () => {
             type="submit"
             className="rounded-md bg-purple-900 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-900 focus:ring-offset-2"
           >
-            {loading ? <Loader /> : "Add Product"}
+            {loading ? "Adding..." : "Add Product"}
           </button>
         </div>
           </div>

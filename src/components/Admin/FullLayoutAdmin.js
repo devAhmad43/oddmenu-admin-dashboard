@@ -83,7 +83,7 @@ useEffect(() => {
       <div className="antialiased bg-gray-100 dark:bg-white-600">
         <Sidebar />
         <main className="p-4 md:ml-64 h-auto pt-20">
-          <Outlet />
+        <Outlet />
         </main>
         <Loader loading={loader}></Loader>
       </div>

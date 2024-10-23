@@ -61,7 +61,7 @@ const Orders = (props) => {
     return (
         <>
             {showMessage && (
-                <div className="text-center bg-blue-100 text-blue-700 p-2 rounded-md mb-4">
+                <div className="text-center bg-yellow-300 uppercase w-md mx-24 text-lg font-bold underline underline-offset-4 text-white p-2 rounded-md mb-4">
                     Click on table number for details
                 </div>
             )}

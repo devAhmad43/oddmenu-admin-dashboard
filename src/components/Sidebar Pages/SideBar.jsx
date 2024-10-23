@@ -67,7 +67,7 @@ export function Sidebar() {
             text: "BreakFast",
             icon: (
               <img
-                src={"/picture3.png"}
+                src={"/breakfast.png"}
                 alt="Authentication Icon"
                 className="flex-shrink-0 w-8 h-8"
               />
@@ -78,7 +78,7 @@ export function Sidebar() {
             text: "Hot Meal",
             icon: (
               <img
-                src={"/picture3.png"}
+                src={"/fried-rice.png"}
                 alt="Authentication Icon"
                 className="flex-shrink-0 w-8 h-8"
               />
@@ -89,7 +89,7 @@ export function Sidebar() {
           text: "Desert",
           icon: (
             <img
-              src={"/picture1.png"}
+              src={"/cake.png"}
               alt="Authentication Icon"
               className="flex-shrink-0 w-8 h-8"
             />
@@ -100,7 +100,7 @@ export function Sidebar() {
             text: "Salad",
             icon: (
               <img
-                src={"/picture3.png"}
+                src={"/salad.png"}
                 alt="Authentication Icon"
                 className="flex-shrink-0 w-8 h-8"
               />
@@ -159,7 +159,7 @@ export function Sidebar() {
               to="/Admin/starter"
               className="flex items-center justify-between mr-4"
             >
-              <img src={"/logo.svg"} className="mr-3 h-10" alt="Gravity Logo" />
+              <img src={"/cutlery.png"} className="mr-3 h-10" alt="oddmenu Logo" />
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                 ODDMENU Admin Panel
               </span>
@@ -221,7 +221,7 @@ export function Sidebar() {
                   )}
                 >
                   <img
-                    src="/users.png"
+                    src="/qr-code.png"
                     alt="Authentication Icon"
                     className="flex-shrink-0 w-6 h-6"
                   />
