@@ -66,7 +66,6 @@ const EditProduct = () => {
       console.error("Error deleting image:", error);
     }
   };
-
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {

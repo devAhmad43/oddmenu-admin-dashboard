@@ -10,10 +10,8 @@ function OrderDetailPage() {
     const { orderId } = useParams(); // Get the order ID from the URL
     const [book, setBook] = useState(null); // To store the product details
     const [orderDetails, setOrderDetails] = useState(null); // To store the order details
-
     useEffect(() => {
         const order = orderdata.find(data => data._id === orderId); // Find the specific order by ID
-
         if (order) {
             const datadetail = bookdata.filter(product =>
                 order.product.some(idObj => idObj.productId === product._id)

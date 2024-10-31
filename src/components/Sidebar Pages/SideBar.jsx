@@ -72,6 +72,7 @@ export function Sidebar() {
           icon: <img src={"/add.svg"} alt="Add Icon" className="w-8 h-8" />,
           link: "/Admin/addproduct",
         },
+        
         // Dynamically map categories from products.categories
         ...uniqueCategories?.map((category) => ({
           text: category.producttype,
@@ -177,7 +178,7 @@ useEffect(() => {
     <>
       <nav
       style={{ backgroundColor: themeColor }}
-        className={'px-4 py-2.5 fixed left-0 right-0 top-0 z-50'}
+        className={'px-4 py-2.5 fixed left-0 border-1 border-b right-0 top-0 z-50'}
       >
         <div className="flex justify-between items-center">
           {/* Left Section: Toggle Button and Logo/Slogan */}

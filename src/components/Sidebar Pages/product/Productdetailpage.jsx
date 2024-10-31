@@ -2,18 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { selectproducts } from '../../../StoreRedux/productSlice';
 import { useSelector } from 'react-redux';
-
 function Productdetailpage() {
     const bookdata = useSelector(selectproducts);
     const { productId } = useParams();
     const [book, setBook] = useState(null);
-
     useEffect(() => {
         const datadetail = bookdata.find(data => data._id === productId);
         setBook(datadetail);
         // eslint-disable-next-line
     }, [bookdata]);
-
     return (
         <div className="container mx-auto md:px-4">
             {book ? (

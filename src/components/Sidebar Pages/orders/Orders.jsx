@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import { serverUrl } from "../../../config";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
 const Orders = () => {
   const { userId } = useParams();
   const [myorders, setmyorders] = useState([]);
