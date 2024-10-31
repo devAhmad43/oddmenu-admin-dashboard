@@ -61,7 +61,7 @@ function Products() {
     }
     return (
         <div>
-            <div className="flex items-center justify-between gap-2  w-full mb-5">
+            <div className="flex items-center justify-between gap-2 mt-4 w-full mb-5">
                 <span className="font-bold text-2xl text-left w-full  text-purple-700">All {producttype}</span>
                 <div className='flex gap-2'>
                     <span className="mt-1 text-purple-700">Filter:</span>

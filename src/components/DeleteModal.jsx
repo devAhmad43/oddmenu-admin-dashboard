@@ -49,6 +49,20 @@ const DeleteModal = (props) => {
 
         }
       }
+      else if (props.whatdelete === "category") {
+        const delResponse = await axios.delete(
+          `${serverUrl}/api/categories/delete/${delId}`
+        );
+        console.log(delResponse)
+        if (delResponse.status === 200) {     
+          toast.success("item deleted successfully");
+          setloading(false);
+        } else {
+          toast.error("Failed to delete Product");
+          setloading(false);
+
+        }
+      }
       setshowModal(false)
     } catch (error) {
       setshowModal(false)

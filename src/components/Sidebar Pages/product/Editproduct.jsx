@@ -21,15 +21,32 @@ const EditProduct = () => {
   };
 
   const [error, setError] = useState(Doorerror);
-  const [addproduct, setaddproduct] = useState();
+  const [addproduct, setaddproduct] = useState({});
+  const [categories, setCategories] = useState([]);
   const [loading, setloading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const cloudName = 'dxtbs0yyv';
   const uploadPreset = 'zuifyjrj';
 
   useEffect(() => {
+    // Fetch product details
     const find = products.find((item) => item._id === productId);
-    setaddproduct(find);
+    if (find) {
+      setaddproduct(find);
+    }
+
+    // Fetch categories from API
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}/api/categories/getCategories`);
+        setCategories(response.data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error("Failed to load categories");
+      }
+    };
+
+    fetchCategories();
   }, [products, productId]);
 
   const handleChangeInput = (e) => {
@@ -74,17 +91,14 @@ const EditProduct = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setloading(true);
-
     try {
       if (addproduct.imagePublicId) {
         await deleteOldImage(addproduct.imagePublicId);
       }
-
       let imageUrl = addproduct.imageUrl;
       if (selectedImage) {
         imageUrl = await uploadImage(selectedImage);
       }
-
       const updatedProduct = {
         title: addproduct.title,
         price: parseInt(addproduct.price),
@@ -129,14 +143,15 @@ const EditProduct = () => {
                       onChange={handleChangeInput}
                       required
                       name="producttype"
-                      value={addproduct.producttype}
+                      value={addproduct.producttype || ""}
                       className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     >
                       <option value="">Select product type</option>
-                      <option value="breakfast">Breakfast</option>
-                      <option value="hotmeal">Hot Meal</option>
-                      <option value="desert">Desert</option>
-                      <option value="salad">Salad</option>
+                      {categories.map((category) => (
+                        <option key={category._id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
                     {error.producttype && (
                       <p className="text-red-700 text-sm font-normal">{error.producttype}</p>
@@ -155,7 +170,7 @@ const EditProduct = () => {
                       required
                       type="text"
                       name="title"
-                      value={addproduct.title}
+                      value={addproduct.title || ""}
                       placeholder="Title"
                       className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
                     />
@@ -170,7 +185,7 @@ const EditProduct = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                      value={addproduct.price}
+                      value={addproduct.price || ""}
                       name="price"
                       onChange={handleChangeInput}
                       type="number"
@@ -187,8 +202,8 @@ const EditProduct = () => {
                     Description
                   </label>
                   <div className="mt-2">
-                  <textarea
-                      value={addproduct.description}
+                    <textarea
+                      value={addproduct.description || ""}
                       name="description"
                       onChange={handleChangeInput}
                       rows="4"

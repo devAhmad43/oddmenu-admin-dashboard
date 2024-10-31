@@ -8,13 +8,13 @@ const StoreProducts=useSelector(selectproducts)
 console.log("stats products===>",StoreProducts);
   return (
     <div>
-      <h2 className="text-3xl font-bold mt-8 mb-5 text-gray-900 sm:text-4xl">
+      <h2 className="text-3xl font-bold mt-8 mb-5 text-purple-900 sm:text-4xl">
        Products Stats
       </h2>
 
      
       <hr></hr>
-      <h1 className="text-lg font-bold font-serif my-2 underline text-yellow-400">Products</h1>
+      <h1 className="text-lg font-bold font-serif my-2 underline text-purple-700">Products</h1>
       <div className="w-full  grid grid-cols-1 gap-3 px-6 ">
         {StoreProducts &&
           <div className="flex col-span-1 items-center px-5 my-5 py-6 shadow-sm rounded-md bg-slate-300">

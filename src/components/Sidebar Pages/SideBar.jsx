@@ -1,20 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import style from "./sidebar.module.css";
-import { useDispatch } from "react-redux";
-import { addAdmin } from "../../StoreRedux/adminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addAdmin, selectAdmin } from "../../StoreRedux/adminSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-
+import { selectproducts } from "../../StoreRedux/productSlice";
+import { serverUrl } from "../../config";
+import { selectThemeColor, setThemeColor } from "../../StoreRedux/themeSlice"; // Adjust the path as needed
+import axios from "axios";
 export function Sidebar() {
   const location = useLocation();
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+  const storeAdmin = useSelector(selectAdmin);
+  const id = storeAdmin._id;
+  const products = useSelector(selectproducts);
   const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
+  };
+  const [color, setColor] = useState("#E460E6"); // default color
+  const saveColor = async () => {
+    try {
+      // Save color to the database for a specific admin
+      const response = await axios.post(
+        `${serverUrl}/api/theme/createtheme/${id}`,
+         {color} 
+      );
+      if (response.status === 200) {
+        dispatch(setThemeColor(response.data.color));
+      }
+    } catch (error) {
+      console.error("Error saving color:", error);
+    }
   };
   const Handlelogout = () => {
     dispatch(addAdmin(null));
@@ -24,108 +43,149 @@ export function Sidebar() {
     }
     toast.success("Logout Successfully");
   };
-
+  const [dropDown, setDropDown] = useState(false);
+  const handleDropDown = () => {
+    setDropDown(!dropDown);
+  };
   useEffect(() => {
     const handleResize = () => {
-      // Check if the window width is less than or equal to 768px (mobile width)
       setIsDrawerOpen(window.innerWidth > 768);
     };
-
-    // Add event listener for window resize
     window.addEventListener("resize", handleResize);
-
-    // Initial check for window width on component mount
     handleResize();
-
-    // Remove event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  const uniqueCategories = Array.from(
+    new Set(products.map((category) => category.producttype))
+  ).map((producttype) =>
+    products.find((category) => category.producttype === producttype)
+  );
   const menuItems = [
     {
       text: "Products",
       icon: (
-        <img
-          src={"/allcards.png"}
-          alt="Authentication Icon"
-          className="flex-shrink-0 w-6 h-8"
-        />
+        <img src={"/allcards.png"} alt="Products Icon" className="w-6 h-8" />
       ),
       submenu: [
         {
           text: "Add Product",
-          icon: (
-            <img
-              src={"/add.svg"}
-              alt="Authentication Icon"
-              className="flex-shrink-0 w-8 h-8"
-            />
-          ),
+          icon: <img src={"/add.svg"} alt="Add Icon" className="w-8 h-8" />,
           link: "/Admin/addproduct",
         },
-        {
-            text: "BreakFast",
-            icon: (
-              <img
-                src={"/breakfast.png"}
-                alt="Authentication Icon"
-                className="flex-shrink-0 w-8 h-8"
-              />
-            ),
-            link: "/Admin/product/breakfast",
-          },
-          {
-            text: "Hot Meal",
-            icon: (
-              <img
-                src={"/fried-rice.png"}
-                alt="Authentication Icon"
-                className="flex-shrink-0 w-8 h-8"
-              />
-            ),
-            link: "/Admin/product/hotmeal",
-          },
-        {
-          text: "Desert",
-          icon: (
-            <img
-              src={"/cake.png"}
-              alt="Authentication Icon"
-              className="flex-shrink-0 w-8 h-8"
-            />
-          ),
-          link: "/Admin/product/desert",
-        },
-        {
-            text: "Salad",
-            icon: (
-              <img
-                src={"/salad.png"}
-                alt="Authentication Icon"
-                className="flex-shrink-0 w-8 h-8"
-              />
-            ),
-            link: "/Admin/product/salad",
-          },
-        // { text: "Invoice", link: "/" },
+        // Dynamically map categories from products.categories
+        ...uniqueCategories?.map((category) => ({
+          text: category.producttype,
+          link: `/Admin/product/${category.producttype}`,
+        })),
       ],
     },
   ];
-  const [dropDownOpen, setDropDownOpen] = useState(menuItems.map(() => false));
-  const toggelDropDown = (index) => {
-    const updatedState = dropDownOpen;
+  const themeColor = useSelector(selectThemeColor);
+
+  const [dropDownOpen, setDropDownOpen] = useState(menuItems?.map(() => false));
+  const toggleDropDown = (index) => {
+    const updatedState = [...dropDownOpen];
     updatedState[index] = !updatedState[index];
-    setDropDownOpen([...updatedState]);
+    setDropDownOpen(updatedState);
+  };
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null); // State to hold Cloudinary image URL
+  const cloudName = "dxtbs0yyv";
+  const uploadPreset = "zuifyjrj";
+  // Fetch existing image when the component mounts
+  useEffect(() => {
+    getImageFromDatabase();
+  }, []);
+
+  // Function to fetch the existing image URL from the server
+  const getImageFromDatabase = async () => {
+    try {
+      const response = await axios.get(`${serverUrl}/api/logo/logo/${id}`);
+      if (response.status === 200) {
+        console.log("logo", response.data);
+        const imageData = response.data.data; // Assuming your response structure
+        setImageUrl(imageData.imageUrl);
+      } else {
+        toast.error("Failed to fetch image URL.");
+      }
+    } catch (error) {
+      console.error("Failed to retrieve image from the database:", error);
+      toast.error("Failed to retrieve image URL.");
+    }
+  };
+// function to get theme color
+useEffect(() => {
+  const fetchThemeColor = async () => {
+    try {
+      const response = await axios.get(`${serverUrl}/api/theme/gettheme/${id}`);
+      if (response.status === 200) {
+        dispatch(setThemeColor(response.data.color));
+      }
+    } catch (error) {
+      console.error('Error fetching color:', error);
+    }
+  };
+
+  fetchThemeColor();
+}, [dispatch]);
+  // Function to handle image selection
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      uploadImage(file); // Upload the selected image
+    }
+  };
+  // Function to upload image to Cloudinary and replace the existing one
+  const uploadImage = async (imageFile) => {
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("upload_preset", uploadPreset);
+    formData.append("folder", "product");
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      );
+      const newImageUrl = response.data.secure_url;
+      // Set the new image URL in the state
+      setImageUrl(newImageUrl);
+
+      // Post the new image URL in the database
+      await postImageToDatabase(newImageUrl);
+
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Image upload failed. Please try again.");
+    }
+  };
+
+  // Function to post the new image URL to the database
+  const postImageToDatabase = async (newImageUrl) => {
+    try {
+      await axios.post(`${serverUrl}/api/logo/upload-image/${id}`, {
+        imageUrl: newImageUrl,
+      });
+      toast.success("Image URL posted successfully!");
+    } catch (error) {
+      console.error("Failed to post image URL to the database:", error);
+      toast.error("Failed to post image URL.");
+    }
   };
   return (
     <>
-      <nav className=" border-b border-gray-200 px-4 py-2.5 bg-yellow-400 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
-        <div className="flex flex-inline justify-between items-center">
-          <div className="flex justify-start items-center">
+      <nav
+      style={{ backgroundColor: themeColor }}
+        className={'px-4 py-2.5 fixed left-0 right-0 top-0 z-50'}
+      >
+        <div className="flex justify-between items-center">
+          {/* Left Section: Toggle Button and Logo/Slogan */}
+          <div className="flex items-center">
             <button
               aria-label="Toggle sidebar"
               onClick={toggleDrawer}
-              className="p-1 mr-1 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              className="p-1 mr-2 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             >
               <svg
                 aria-hidden="true"
@@ -138,7 +198,7 @@ export function Sidebar() {
                   fillRule="evenodd"
                   d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
                   clipRule="evenodd"
-                ></path>
+                />
               </svg>
               <svg
                 aria-hidden="true"
@@ -151,31 +211,72 @@ export function Sidebar() {
                   fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                   clipRule="evenodd"
-                ></path>
+                />
               </svg>
               <span className="sr-only">Toggle sidebar</span>
             </button>
-            <Link
-              to="/Admin/starter"
-              className="flex items-center justify-between mr-4"
-            >
-              <img src={"/cutlery.png"} className="mr-3 h-10" alt="oddmenu Logo" />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                ODDMENU Admin Panel
-              </span>
-            </Link>
+
+            <div className="relative">
+              {selectedImage || imageUrl ? (
+                <div className="relative">
+                  <img
+                    src={
+                      selectedImage
+                        ? URL.createObjectURL(selectedImage)
+                        : imageUrl
+                    }
+                    alt="Selected or Uploaded"
+                    className="mt-1 w-40 h-16 mr-4"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="absolute bottom-0 right-0 cursor-pointer"
+                  >
+                    <input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="hidden" // Hide the input
+                    />
+                    <FontAwesomeIcon className="text-white -pr-12" icon={faEdit} />
+                  </label>
+                </div>
+              ) : (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="block w-full rounded-md border-0 py-1.5 text-purple-900 shadow-sm focus:ring-2 focus:ring-purple-600"
+                />
+              )}
+            </div>
           </div>
+          <span className="self-center hidden underline md:block text-2xl font-semibold whitespace-nowrap dark:text-white">
+            Your best cafe partner{" "}
+          </span>
+          {/* Right Section: Theme Button */}
           <div className="flex items-center lg:order-2">
-            <button
-              type="button"
-              data-drawer-toggle="drawer-navigation"
-              data-drawer-target="drawer-navigation"
-              aria-controls="drawer-navigation"
-              className="p-2 mr-1 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              onClick={toggleDrawer}
-            >
-              <span className="sr-only">Toggle navigation</span>
-            </button>
+            <div className="relative inline-block mt-4 px-6 sm:ml-1.5">
+              <button
+                onClick={() => {
+            handleDropDown();
+            if (dropDown) saveColor(); // Save color if dropDown is open
+          }}
+                className="p-1 lg:px-6 bg-white rounded hover:text-blue-400"
+              >
+              {dropDown ? 'Change' : 'Theme'}
+              </button>
+              {dropDown && (
+                <div className="absolute mt-1 px-4 text-center text-black rounded-md shadow-lg bg-white ring-4 ring-black ring-opacity-5 z-10">
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -183,29 +284,29 @@ export function Sidebar() {
       {/* <!-- Sidebar --> */}
 
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ${
+            style={{ backgroundColor: themeColor, }}
+        className={`
+         fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-full"
-        } border-r border-gray-200 md:translate-x-0 bg-yellow-500 dark:border-gray-700`}
+        } border-r border-gray-200 md:translate-x-0 dark:border-gray-700`}
         aria-label="Sidenav"
-        id="drawer-navigation"
       >
-        <div className="overflow-y-auto py-5 px-3 h-full dark:bg-yellow-400">
-          <ul className="space-y-2 h-96 ">
-            <div className={`${style.heightScroll} pt-3 `}>
+        <div className="overflow-y-auto py-5 px-3 h-full ">
+          <ul className="space-y-2 h-96">
+            <div className={`${style.heightScroll} pt-3`}>
               <li>
                 <Link
                   to="/Admin/starter"
-                  className={classNames(
+                  className={
                     location.pathname === "/Admin/starter"
-                      ? "text-black bg-gray-200"
-                      : "text-white",
-                    " flex items-center p-2 text-base font-medium  rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black group "
-                  )}
+                      ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"
+                      : "text-white flex items-center p-2 text-base font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black group"
+                  }
                 >
                   <img
                     src="/dashboard.png"
-                    alt="Authentication Icon"
-                    className="flex-shrink-0 w-6 h-6"
+                    alt="Dashboard Icon"
+                    className="w-6 h-6"
                   />
                   <span className="ml-3">Dashboard</span>
                 </Link>
@@ -213,103 +314,85 @@ export function Sidebar() {
               <li>
                 <Link
                   to="/Admin/qrcode"
-                  className={classNames(
-                    location.pathname === "/Admin/users"
-                      ? "text-black bg-gray-200"
-                      : "text-white",
-                    " flex items-center p-2 text-base font-medium  rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black group "
-                  )}
+                  className={
+                    location.pathname === "/Admin/qrcode"
+                      ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"
+                      : "text-white flex items-center p-2 text-base font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black group"
+                  }
                 >
                   <img
                     src="/qr-code.png"
-                    alt="Authentication Icon"
-                    className="flex-shrink-0 w-6 h-6"
+                    alt="QR Code Icon"
+                    className="w-6 h-6"
                   />
                   <span className="ml-3">Qr Code</span>
                 </Link>
               </li>
-
-              {menuItems &&
-                menuItems.map((item, index) => (
-                  <li key={index}>
-                    <div
-                      onClick={() => {
-                        toggelDropDown(index);
-                      }}
-                      className="flex items-center cursor-pointer p-2 w-full text-base font-medium text-white rounded-lg transition duration-75 group hover:bg-gray-200 hover:text-black"
+              {menuItems?.map((item, index) => (
+                <li key={index}>
+                  <div
+                    onClick={() => toggleDropDown(index)}
+                    className="flex items-center cursor-pointer p-2 w-full text-base font-medium text-white rounded-lg hover:bg-gray-200 hover:text-black"
+                  >
+                    <span>{item.icon}</span>
+                    <span className="flex-1 ml-3">{item.text}</span>
+                    <svg
+                      className="w-6 h-6 text-gray-500 hover:text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      <span>{item.icon}</span>
-                      <span className="flex-1 ml-3 text-left  whitespace-nowrap">
-                        {item.text}
-                      </span>
-                      <svg
-                        aria-hidden="true"
-                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 hover:text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <ul
-                      style={{
-                        display: dropDownOpen[index] ? "block" : "none",
-                      }}
-                      className="hidden py-2 space-y-2"
-                    >
-                      {item.submenu.map((menu, index) => (
-                        <li key={index}>
-                          <Link
-                            to={menu.link}
-                            className={classNames(
-                              location.pathname === `${menu.link}`
-                                ? "text-black bg-gray-200"
-                                : "text-white",
-                              " flex items-center p-2 text-base font-medium  rounded-lg transition duration-75 hover:bg-gray-100 hover:text-black group "
-                            )}
-                          >
-                            <span>{menu.icon}</span>
-                            <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                              {menu.text}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <ul
+                    style={{ display: dropDownOpen[index] ? "block" : "none" }}
+                    className="hidden py-2 space-y-2"
+                  >
+                    {item?.submenu?.map((menu, index) => (
+                      <li key={index}>
+                        <Link
+                          to={menu.link}
+                          className={
+                            location.pathname === menu.link
+                              ? "text-black bg-gray-200 flex items-center p-2 capitalize text-base font-medium rounded-lg"
+                              : "text-white flex items-center p-2 text-base capitalize font-medium rounded-lg hover:bg-gray-100 hover:text-black"
+                          }
+                        >
+                          {menu.icon}
+                          <span className="ml-3">{menu.text}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
 
               <li>
                 <Link
                   to="/Admin/orders/allorders"
-                  className={classNames(
+                  className={
                     location.pathname === "/Admin/orders"
-                      ? "text-black bg-gray-200"
-                      : "text-white",
-                    " flex items-center p-2 text-base font-medium  rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black group "
-                  )}
+                      ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"
+                      : "text-white flex items-center p-2 text-base font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-200 hover:text-black"
+                  }
                 >
-                  <img
-                    src="/order.png"
-                    alt="Authentication Icon"
-                    className="flex-shrink-0 w-6 h-6"
-                  />
+                  <img src="/order.png" alt="Orders Icon" className="w-6 h-6" />
                   <span className="ml-3">Orders</span>
                 </Link>
               </li>
             </div>
           </ul>
-
           <div
             className="absolute cursor-pointer flex bottom-0 w-full"
             onClick={Handlelogout}
           >
-            <div className="inline-flex  px-14 mb-2 left-0  py-2 bottom-0 gap-1 transform text-xl font-semibold font-mono text-yellow-500 border border-white rounded hover:bg-yellow-400 hover:text-white bg-white focus:outline-none focus:ring">
+            <div
+              className={`inline-flex  px-14 mb-2 left-0  py-2 bottom-0 gap-1 transform text-xl font-semibold font-mono  border border-white rounded  hover:text-purple-900 bg-white focus:outline-none focus:ring`}
+            >
               <span className="text-md">Log Out</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

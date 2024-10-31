@@ -60,8 +60,8 @@ export default function SignIn() {
 
   return (
     <>
-      <div className="area bg-yellow-400">
-        <ul className="circles  bg-yellow-400">
+      <div className="area bg-purple-800">
+        <ul className="circles  bg-purple-800">
           <li></li>
           <li></li>
           <li></li>

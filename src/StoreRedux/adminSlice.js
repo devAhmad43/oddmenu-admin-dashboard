@@ -33,6 +33,5 @@ const authSlice = createSlice({
 export const selectAdmin = (state) => state.admin.admin;
 export const selectAuthLoading = (state) => state.admin.loading;
 export const selectAuthError = (state) => state.admin.error;
-
 export const { signupRequest, signupSuccess, signupFailure, addAdmin } = authSlice.actions;
 export default authSlice.reducer;

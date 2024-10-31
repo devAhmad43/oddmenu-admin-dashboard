@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./App.css";
+import "./App.css"; 
 import { RoutingcallAuth } from "./components/Auth/RoutingcallAuth";
 import { RoutingCallAdmin } from "./components/Admin/RoutingCallAdmin";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,7 +37,6 @@ function App() {
       }
     }
   }, [storeAdmin, dispatch])
-
   return (
     <Router>
       <div className="App">
@@ -46,7 +45,6 @@ function App() {
           {storeAdmin && <Route path="/Admin/*" element={<RoutingCallAdmin />} />}
         </Routes>
         <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-
       </div>
     </Router>
   );
