@@ -60,8 +60,8 @@ export default function SignIn() {
 
   return (
     <>
-      <div className="area bg-purple-800">
-        <ul className="circles  bg-purple-800">
+      <div className="area bg-purple-700">
+        <ul className="circles  bg-purple-700">
           <li></li>
           <li></li>
           <li></li>
@@ -82,7 +82,7 @@ export default function SignIn() {
                 ODD MENU ADMIN DASHBOARD
               </h2>
             </div>
-            <h2 className="my-1 text-center text-2xl font-bold leading-9 tracking-tight text-yellow-300">
+            <h2 className="my-1 text-center text-2xl font-bold leading-9 tracking-tight text-purple-800">
               LOGIN
             </h2>
           </div>
@@ -177,7 +177,7 @@ export default function SignIn() {
                   type="submit"
                   disabled={loading}
                   onClick={handleChange}
-                  className="flex w-full justify-center rounded-md bg-yellow-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+                  className="flex w-full justify-center rounded-md bg-purple-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
                 >
                   Sign in
                 </button>
