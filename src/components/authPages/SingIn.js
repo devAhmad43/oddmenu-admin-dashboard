@@ -139,7 +139,7 @@ export default function SignIn() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="w-5 h-5 text-yellow-400"
+                        className="w-5 h-5 text-purple-400"
                       >
                         <path
                           strokeLinecap="round"
@@ -159,7 +159,7 @@ export default function SignIn() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="w-5 h-5 text-yellow-500"
+                        className="w-5 h-5 text-purple-500"
                       >
                         <path
                           strokeLinecap="round"
@@ -189,7 +189,7 @@ export default function SignIn() {
               Not a member?{" "}
               <Link
                 to="/signup"
-                className="font-semibold leading-6 text-yellow-600 hover:text-yellow-300"
+                className="font-semibold leading-6 text-purple-600 hover:text-purple-500"
               >
                 Create a New Account
               </Link>
