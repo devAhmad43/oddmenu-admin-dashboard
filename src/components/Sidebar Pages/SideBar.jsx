@@ -264,21 +264,22 @@ export function Sidebar() {
               )}
             </div>
           </div>
-          <span className="self-center hidden md:block text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center  transition ease-in-out delay-300 hover:-translate-x-1  hover:scale-110 duration-500 hidden md:block text-2xl font-semibold whitespace-nowrap dark:text-white">
             Your best cafe partner{" "}
           </span>
           {/* Right Section: Theme Button */}
           <div className="flex items-center lg:order-2">
             <div className="relative inline-block mt-4 px-6 sm:ml-1.5">
-              <button
-                onClick={() => {
-                  handleDropDown();
-                  if (dropDown) saveColor(); // Save color if dropDown is open
-                }}
-                className="p-1 lg:px-6 bg-white rounded hover:text-blue-400"
-              >
-                {dropDown ? "Save" : "Theme"}
-              </button>
+            <button
+  onClick={() => {
+    handleDropDown();
+    if (dropDown) saveColor(); // Save color if dropDown is open
+  }}
+  className="p-1 lg:px-6 bg-white rounded hover:text-blue-400 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+>
+  {dropDown ? "Save" : "Theme"}
+</button>
+
               {dropDown && (
                 <div className="absolute mt-1 px-4 text-center text-black rounded-md shadow-lg bg-white ring-4 ring-black ring-opacity-5 z-10">
                   <input
@@ -351,7 +352,6 @@ export function Sidebar() {
                   <div
                     onClick={() => {
                       toggleDropDown(index);
-                      // handleMenuCl ick();
                     }}
                     className="flex items-center cursor-pointer p-2 w-full text-base font-medium text-white rounded-lg hover:bg-gray-200 hover:text-black"
                   >
@@ -376,9 +376,9 @@ export function Sidebar() {
                     {item?.submenu?.map((menu, index) => (
                       <li key={index} className="mb-1">
                         <Link
-                          // onClick={() => {
-                          //   handleMenuClick();
-                          // }}
+                          onClick={() => {
+                            handleMenuClick();
+                          }}
                           to={menu.link}
                           className={
                             location.pathname === menu.link
