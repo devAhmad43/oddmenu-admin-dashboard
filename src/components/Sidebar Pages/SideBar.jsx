@@ -26,7 +26,7 @@ export function Sidebar() {
       // Save color to the database for a specific admin
       const response = await axios.post(
         `${serverUrl}/api/theme/createtheme/${id}`,
-         {color} 
+        { color }
       );
       if (response.status === 200) {
         dispatch(setThemeColor(response.data.color));
@@ -72,7 +72,7 @@ export function Sidebar() {
           icon: <img src={"/add.svg"} alt="Add Icon" className="w-8 h-8" />,
           link: "/Admin/addproduct",
         },
-        
+
         // Dynamically map categories from products.categories
         ...uniqueCategories?.map((category) => ({
           text: category.producttype,
@@ -114,28 +114,35 @@ export function Sidebar() {
       toast.error("Failed to retrieve image URL.");
     }
   };
-// function to get theme color
-useEffect(() => {
-  const fetchThemeColor = async () => {
-    try {
-      const response = await axios.get(`${serverUrl}/api/theme/gettheme/${id}`);
-      if (response.status === 200) {
-        dispatch(setThemeColor(response.data.color));
+  // function to get theme color
+  useEffect(() => {
+    const fetchThemeColor = async () => {
+      try {
+        const response = await axios.get(
+          `${serverUrl}/api/theme/gettheme/${id}`
+        );
+        if (response.status === 200) {
+          dispatch(setThemeColor(response.data.color));
+        }
+      } catch (error) {
+        console.error("Error fetching color:", error);
       }
-    } catch (error) {
-      console.error('Error fetching color:', error);
-    }
-  };
+    };
 
-  fetchThemeColor();
-}, [dispatch]);
+    fetchThemeColor();
+  }, [dispatch]);
   // Function to handle image selection
+
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
       uploadImage(file); // Upload the selected image
     }
+  };
+  // Close drawer when navigating to any menu item
+  const handleMenuClick = () => {
+    setIsDrawerOpen(false); // Close the drawer
   };
   // Function to upload image to Cloudinary and replace the existing one
   const uploadImage = async (imageFile) => {
@@ -177,8 +184,10 @@ useEffect(() => {
   return (
     <>
       <nav
-      style={{ backgroundColor: themeColor }}
-        className={'px-4 py-2.5 fixed left-0 border-1 border-b right-0 top-0 z-50'}
+        style={{ backgroundColor: themeColor }}
+        className={
+          "px-4 py-2.5 fixed left-0 border-1 border-b right-0 top-0 z-50"
+        }
       >
         <div className="flex justify-between items-center">
           {/* Left Section: Toggle Button and Logo/Slogan */}
@@ -219,7 +228,7 @@ useEffect(() => {
 
             <div className="relative">
               {selectedImage || imageUrl ? (
-                <div className="relative">
+                <div className="relative ">
                   <img
                     src={
                       selectedImage
@@ -227,7 +236,7 @@ useEffect(() => {
                         : imageUrl
                     }
                     alt="Selected or Uploaded"
-                    className="mt-1 w-40 h-16 mr-4"
+                    className="mt-1 w-40 h-16 mr-8 border-4 border border-gray-300 rounded-md"
                   />
                   <label
                     htmlFor="image-upload"
@@ -240,7 +249,9 @@ useEffect(() => {
                       onChange={handleImageSelect}
                       className="hidden" // Hide the input
                     />
-                    <FontAwesomeIcon className="text-white -pr-12" icon={faEdit} />
+                    <span className="ml-4">
+                      <FontAwesomeIcon className="text-white" icon={faEdit} />
+                    </span>
                   </label>
                 </div>
               ) : (
@@ -253,7 +264,7 @@ useEffect(() => {
               )}
             </div>
           </div>
-          <span className="self-center hidden underline md:block text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center hidden md:block text-2xl font-semibold whitespace-nowrap dark:text-white">
             Your best cafe partner{" "}
           </span>
           {/* Right Section: Theme Button */}
@@ -261,12 +272,12 @@ useEffect(() => {
             <div className="relative inline-block mt-4 px-6 sm:ml-1.5">
               <button
                 onClick={() => {
-            handleDropDown();
-            if (dropDown) saveColor(); // Save color if dropDown is open
-          }}
+                  handleDropDown();
+                  if (dropDown) saveColor(); // Save color if dropDown is open
+                }}
                 className="p-1 lg:px-6 bg-white rounded hover:text-blue-400"
               >
-              {dropDown ? 'Change' : 'Theme'}
+                {dropDown ? "Save" : "Theme"}
               </button>
               {dropDown && (
                 <div className="absolute mt-1 px-4 text-center text-black rounded-md shadow-lg bg-white ring-4 ring-black ring-opacity-5 z-10">
@@ -285,19 +296,22 @@ useEffect(() => {
       {/* <!-- Sidebar --> */}
 
       <aside
-            style={{ backgroundColor: themeColor, }}
+        style={{ backgroundColor: themeColor }}
         className={`
          fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ${
-          isDrawerOpen ? "translate-x-0" : "-translate-x-full"
-        } border-r border-gray-200 md:translate-x-0 dark:border-gray-700`}
+           isDrawerOpen ? "translate-x-0" : "-translate-x-full"
+         } border-r border-gray-200 md:translate-x-0 dark:border-gray-700`}
         aria-label="Sidenav"
       >
         <div className="overflow-y-auto py-5 px-3 h-full ">
           <ul className="space-y-2 h-96">
             <div className={`${style.heightScroll} pt-3`}>
-              <li>
+              <li className="mb-1 mt-1">
                 <Link
                   to="/Admin/starter"
+                  onClick={() => {
+                    handleMenuClick();
+                  }}
                   className={
                     location.pathname === "/Admin/starter"
                       ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"
@@ -312,9 +326,12 @@ useEffect(() => {
                   <span className="ml-3">Dashboard</span>
                 </Link>
               </li>
-              <li>
+              <li className="mb-1">
                 <Link
                   to="/Admin/qrcode"
+                  onClick={() => {
+                  handleMenuClick();
+                  }}
                   className={
                     location.pathname === "/Admin/qrcode"
                       ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"
@@ -328,11 +345,14 @@ useEffect(() => {
                   />
                   <span className="ml-3">Qr Code</span>
                 </Link>
-              </li>
+              </li >
               {menuItems?.map((item, index) => (
-                <li key={index}>
+                <li key={index} className="mb-1">
                   <div
-                    onClick={() => toggleDropDown(index)}
+                    onClick={() => {
+                      toggleDropDown(index);
+                      // handleMenuCl ick();
+                    }}
                     className="flex items-center cursor-pointer p-2 w-full text-base font-medium text-white rounded-lg hover:bg-gray-200 hover:text-black"
                   >
                     <span>{item.icon}</span>
@@ -354,8 +374,11 @@ useEffect(() => {
                     className="hidden py-2 space-y-2"
                   >
                     {item?.submenu?.map((menu, index) => (
-                      <li key={index}>
+                      <li key={index} className="mb-1">
                         <Link
+                          // onClick={() => {
+                          //   handleMenuClick();
+                          // }}
                           to={menu.link}
                           className={
                             location.pathname === menu.link
@@ -371,10 +394,12 @@ useEffect(() => {
                   </ul>
                 </li>
               ))}
-
-              <li>
+              <li className="mb-1">
                 <Link
                   to="/Admin/orders/allorders"
+                  onClick={() => {
+                    handleMenuClick();
+                  }}
                   className={
                     location.pathname === "/Admin/orders"
                       ? "text-black bg-gray-200 flex items-center p-2 text-base font-medium rounded-lg"

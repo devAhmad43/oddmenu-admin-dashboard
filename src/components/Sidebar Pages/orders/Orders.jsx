@@ -62,9 +62,9 @@ const Orders = () => {
 
   return (
     <>
-      {showMessage && (
+     {showMessage && (
         <div
-          className={`text-center uppercase w-md  mx-24 text-lg font-bold underline underline-offset-4 text-purple-900 p-2 rounded-md mb-4`}
+          className={`text-center whitespace-nowrap lg:text-lg flex-row uppercase w-md text-sm font-bold underline underline-offset-4 text-purple-900 p-2 rounded-md mb-4`}
         >
           Click on table number for details
         </div>
