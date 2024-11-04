@@ -59,7 +59,7 @@ const Addproduct = () => {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [categories]);
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;

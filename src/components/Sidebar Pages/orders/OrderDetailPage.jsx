@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { selectproducts } from '../../../StoreRedux/productSlice';
 import { selectorders } from '../../../StoreRedux/orderSlice';
 import { useSelector } from 'react-redux';
-
 function OrderDetailPage() {
     const bookdata = useSelector(selectproducts); // Product data from Redux
     const orderdata = useSelector(selectorders); // Order data from Redux
@@ -13,14 +12,25 @@ function OrderDetailPage() {
     useEffect(() => {
         const order = orderdata.find(data => data._id === orderId); // Find the specific order by ID
         if (order) {
-            const datadetail = bookdata.filter(product =>
-                order.product.some(idObj => idObj.productId === product._id)
-            );
+            const datadetail = bookdata.map(product => {
+                // Find the matching product entry in the order array
+                const matchedOrder = order.product.find(idObj => idObj.productId === product._id);
+            
+                // If a match is found, include the product with the quantity
+                if (matchedOrder) {
+                    return {
+                        ...product,
+                        quantity: matchedOrder.quantity // Add the quantity to the product details
+                    };
+                }
+            
+                // Return null for non-matches (can be filtered out later)
+                return null;
+            }).filter(product => product !== null); // Filter out nulls            
             setBook(datadetail); // Set the product details
             setOrderDetails(order); // Set the order details
         }
     }, [bookdata, orderdata, orderId]);
-
     return (
         <div className="container mx-auto md:px-4">
             {orderDetails ? (
@@ -82,10 +92,11 @@ function OrderDetailPage() {
 
                                         <p className="text-purple-600 font-bold">Product Type:</p>
                                         <p className="text-gray-600 mb-2">{book1.producttype}</p>
-
                                         <p className="text-purple-600 font-bold">Description:</p>
                                         <p className="text-gray-600">{book1.description}</p>
-                                    </div>
+                                        <p className="text-purple-600 font-bold">Quantity:</p>
+                                        <p className="text-gray-600">{book1.quantity ? book1.quantity : '-'}</p>
+                                        </div>
                                 </div>
                             ))}
                         </div>
