@@ -79,7 +79,7 @@ export default function SignIn() {
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <div className="flex items-center justify-between">
               <h2 className="my-2 text-center underline underline-offset-1 text-2xl font-bold leading-9 tracking-tight text-black">
-                ODD MENU ADMIN DASHBOARD
+                XPOWER ADMIN DASHBOARD
               </h2>
             </div>
             <h2 className="my-1 text-center text-2xl font-bold leading-9 tracking-tight text-purple-800">
