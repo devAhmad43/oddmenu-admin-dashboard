@@ -5,7 +5,7 @@ import { Loader } from "../Loader/loader";
 import axios from "axios";
 import { serverUrl } from "../../config";
 import { useDispatch, useSelector} from "react-redux";
- import { Addorder } from "../../StoreRedux/orderSlice";
+ import { AddNeworder } from "../../StoreRedux/orderSlice";
 import { toast } from "react-toastify";
 import { Sidebar } from "../Sidebar Pages/SideBar";
 import { Addproduct, selectproducts } from "../../StoreRedux/productSlice";
@@ -54,7 +54,7 @@ useEffect(() => {
         console.log("order===.",response)
         if (response && response.status === 200) {
           setloader(false);
-          dispatch(Addorder(response.data.data));
+          dispatch(AddNeworder(response.data.data));
            toast.success("Orders fetched successfully");
         }
       } catch (error) {

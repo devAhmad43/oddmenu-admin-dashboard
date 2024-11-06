@@ -5,12 +5,11 @@ export const orderSlice = createSlice({
     orders: [],
   },
   reducers: {
-
     Addorder: (state, action) => {
       state.orders = action.payload;
     },
     AddNeworder: (state, action) => {
-      state.orders = [action.payload, ...state.orders];
+      state.orders = action.payload
     },
     updateorders: (state, action) => {
       let data = action.payload;

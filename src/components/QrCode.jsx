@@ -123,7 +123,7 @@ const QrCode = () => {
             onChange={() => setSelectedOption('table')}
             className="mr-2"
           />
-          Generate for Table Number
+          Generate for Table Number {tableNumber}
         </label>
         <label className="inline-flex items-center">
           <input
@@ -158,7 +158,7 @@ const QrCode = () => {
       <div className="mt-10">
         {qrData && (
           <div className="mb-5">
-            <h2 className="text-xl font-semibold">Table QR Code</h2>
+            <h2 className="text-xl font-semibold">Table QR Code {tableNumber}</h2>
             <div id={`qr-code-svg-${tableNumber}`}>
               <QRCodeSVG value={qrData} size={200} />
             </div>
