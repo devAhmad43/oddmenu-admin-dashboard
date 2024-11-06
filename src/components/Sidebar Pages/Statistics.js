@@ -1,25 +1,9 @@
 import { useSelector } from "react-redux";
 import { selectorders } from "../../StoreRedux/orderSlice";
 import {selectproducts} from "../../StoreRedux/productSlice";
-
 const Statistics = () => {
   const storeOrders = useSelector(selectorders);
 const StoreProducts=useSelector(selectproducts)
-const productIcons = {
-  hotmeal: "/fried-rice.png",
-  desert: "/cake.png",
-  breakfast: "/breakfast.png",
-  salad: "/salad.png",
-  // Add more icons for additional product types
-};
-
-const productColors = {
-  hotmeal: "green-600",
-  desert: "yellow-500",
-  breakfast: "red-600",
-  salad: "blue-600",
-  // Define colors for additional product types
-};
 console.log("stats products===>",StoreProducts);
   return (
     <div>
